@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos - CRUD con Búsqueda</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-shopping-cart"></i> Gestión de Productos</h1>
+                <p>Sistema CRUD con funcionalidad de búsqueda avanzada</p>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Buscar productos por nombre o descripción..."
+                        autocomplete="off"
+                    >
+                    <button id="clearSearch" class="clear-btn" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-filters">
+                    <select id="categoryFilter">
+                        <option value="">Todas las categorías</option>
+                    </select>
+                    <div class="price-range">
+                        <input type="number" id="minPrice" placeholder="Precio mín." min="0">
+                        <input type="number" id="maxPrice" placeholder="Precio máx." min="0">
+                    </div>
+                    <button id="applyFilters" class="btn btn-secondary">
+                        <i class="fas fa-filter"></i>
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+            <div class="search-results-info">
+                <span id="searchResultsText"></span>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Formulario de Producto -->
+            <section class="form-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-plus-circle"></i> <span id="formTitle">Agregar Nuevo Producto</span></h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="productForm" class="product-form">
+                            <input type="hidden" id="productId" name="id">
+                            
+                            <div class="form-group">
+                                <label for="name">
+                                    <i class="fas fa-tag"></i>
+                                    Nombre del Producto
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="name" 
+                                    name="name" 
+                                    required 
+                                    minlength="2" 
+                                    maxlength="100"
+                                    placeholder="Ingresa el nombre del producto"
+                                >
+                                <span class="error-message" id="nameError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description">
+                                    <i class="fas fa-align-left"></i>
+                                    Descripción
+                                </label>
+                                <textarea 
+                                    id="description" 
+                                    name="description" 
+                                    required
+                                    maxlength="500"
+                                    rows="3"
+                                    placeholder="Describe el producto"
+                                ></textarea>
+                                <span class="error-message" id="descriptionError"></span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="price">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Precio
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="price" 
+                                        name="price" 
+                                        required
+                                        min="0"
+                                        step="0.01"
+                                        placeholder="0.00"
+                                    >
+                                    <span class="error-message" id="priceError"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="stock">
+                                        <i class="fas fa-boxes"></i>
+                                        Stock
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="stock" 
+                                        name="stock" 
+                                        required
+                                        min="0"
+                                        placeholder="0"
+                                    >
+                                    <span class="error-message" id="stockError"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="category">
+                                        <i class="fas fa-list"></i>
+                                        Categoría
+                                    </label>
+                                    <select id="category" name="category" required>
+                                        <option value="">Selecciona una categoría</option>
+                                        <option value="Electrónicos">Electrónicos</option>
+                                        <option value="Ropa">Ropa</option>
+                                        <option value="Hogar">Hogar</option>
+                                        <option value="Deportes">Deportes</option>
+                                        <option value="Libros">Libros</option>
+                                        <option value="Juguetes">Juguetes</option>
+                                        <option value="Salud">Salud</option>
+                                        <option value="Otros">Otros</option>
+                                    </select>
+                                    <span class="error-message" id="categoryError"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="imageUrl">
+                                        <i class="fas fa-image"></i>
+                                        URL de Imagen (opcional)
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="imageUrl" 
+                                        name="imageUrl"
+                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                    >
+                                    <span class="error-message" id="imageUrlError"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="available" name="available" checked>
+                                    <span class="checkmark"></span>
+                                    Producto disponible
+                                </label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="fas fa-plus"></i>
+                                    <span id="submitText">Agregar Producto</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">
+                                    <i class="fas fa-times"></i>
+                                    Cancelar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Lista de Productos -->
+            <section class="products-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list"></i> Productos</h2>
+                        <div class="products-count">
+                            <span id="productsCount">0</span> productos
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="loadingSpinner" class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            Cargando productos...
+                        </div>
+                        <div id="productsContainer" class="products-container">
+                            <!-- Los productos se cargarán aquí dinámicamente -->
+                        </div>
+                        <div id="emptyState" class="empty-state" style="display: none;">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No hay productos</h3>
+                            <p id="emptyStateMessage">No se encontraron productos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <!-- Modal de Confirmación -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación</h3>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar este producto?</p>
+                    <p><strong id="productToDelete"></strong></p>
+                    <p class="warning">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelDelete">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button class="btn btn-danger" id="confirmDelete">
+                        <i class="fas fa-trash"></i>
+                        Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
