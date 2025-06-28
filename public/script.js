@@ -1,6 +1,4 @@
-
 const API_BASE_URL = window.location.origin + "/api"
-
 const searchInput = document.getElementById("searchInput")
 const clearSearchBtn = document.getElementById("clearSearch")
 const categoryFilter = document.getElementById("categoryFilter")
@@ -8,7 +6,6 @@ const minPriceInput = document.getElementById("minPrice")
 const maxPriceInput = document.getElementById("maxPrice")
 const applyFiltersBtn = document.getElementById("applyFilters")
 const searchResultsText = document.getElementById("searchResultsText")
-
 const productForm = document.getElementById("productForm")
 const productsContainer = document.getElementById("productsContainer")
 const loadingSpinner = document.getElementById("loadingSpinner")
@@ -16,12 +13,10 @@ const emptyState = document.getElementById("emptyState")
 const emptyStateMessage = document.getElementById("emptyStateMessage")
 const productsCount = document.getElementById("productsCount")
 const toastContainer = document.getElementById("toastContainer")
-
 const confirmModal = document.getElementById("confirmModal")
 const productToDelete = document.getElementById("productToDelete")
 const confirmDeleteBtn = document.getElementById("confirmDelete")
 const cancelDeleteBtn = document.getElementById("cancelDelete")
-
 const formTitle = document.getElementById("formTitle")
 const submitBtn = document.getElementById("submitBtn")
 const submitText = document.getElementById("submitText")
@@ -35,6 +30,7 @@ let searchTimeout = null
 
 
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Aplicación iniciada")
   loadProducts()
   loadCategories()
   setupEventListeners()
@@ -45,7 +41,6 @@ function setupEventListeners() {
 
   productForm.addEventListener("submit", handleFormSubmit)
   cancelBtn.addEventListener("click", resetForm)
-
   searchInput.addEventListener("input", handleSearchInput)
   clearSearchBtn.addEventListener("click", clearSearch)
   applyFiltersBtn.addEventListener("click", applyFilters)
@@ -61,36 +56,18 @@ function setupEventListeners() {
     if (e.target === confirmModal) hideConfirmModal()
   })
 
+
   const inputs = productForm.querySelectorAll("input, select, textarea")
   inputs.forEach((input) => {
     input.addEventListener("blur", () => validateField(input))
     input.addEventListener("input", () => clearFieldError(input))
-  })
-
-
-  document.addEventListener("keydown", (e) => {
-    if (e.ctrlKey && e.key === "k") {
-      e.preventDefault()
-      searchInput.focus()
-    }
-    if (e.key === "Escape") {
-      if (confirmModal.classList.contains("show")) {
-        hideConfirmModal()
-      }
-      if (isEditing) {
-        resetForm()
-      }
-    }
   })
 }
 
 
 function handleSearchInput(e) {
   const searchTerm = e.target.value.trim()
-
-
   clearSearchBtn.style.display = searchTerm ? "block" : "none"
-
 
   clearTimeout(searchTimeout)
   searchTimeout = setTimeout(() => {
@@ -136,6 +113,7 @@ function applyFilters() {
   const category = categoryFilter.value
   const minPrice = minPriceInput.value
   const maxPrice = maxPriceInput.value
+
 
   const params = new URLSearchParams()
   if (searchTerm) params.append("search", searchTerm)
@@ -185,6 +163,7 @@ async function loadProducts() {
       filteredProducts = result.data
       renderProducts()
       updateProductsCount()
+      console.log(`✅ ${products.length} productos cargados`)
     } else {
       showToast("Error al cargar productos", "error")
     }
@@ -226,7 +205,7 @@ function renderProducts() {
     if (searchTerm) {
       emptyStateMessage.textContent = `No se encontraron productos para "${searchTerm}"`
     } else {
-      emptyStateMessage.textContent = "No hay productos registrados."
+      emptyStateMessage.textContent = "No hay productos registrados. ¡Agrega el primero!"
     }
     return
   }
@@ -285,7 +264,7 @@ function updateProductsCount() {
   productsCount.textContent = filteredProducts.length
 }
 
-
+// Funciones del formulario
 async function handleFormSubmit(e) {
   e.preventDefault()
 
@@ -351,13 +330,11 @@ function editProduct(id) {
   document.getElementById("available").checked = product.available
   document.getElementById("imageUrl").value = product.imageUrl || ""
 
- 
   isEditing = true
   formTitle.textContent = "Editar Producto"
   submitText.textContent = "Actualizar Producto"
   submitBtn.innerHTML = '<i class="fas fa-save"></i> Actualizar Producto'
   cancelBtn.style.display = "inline-flex"
-
 
   document.querySelector(".form-section").scrollIntoView({ behavior: "smooth" })
 }
@@ -366,13 +343,11 @@ function resetForm() {
   productForm.reset()
   document.getElementById("productId").value = ""
 
-
   const errorMessages = productForm.querySelectorAll(".error-message")
   errorMessages.forEach((error) => error.classList.remove("show"))
 
   const inputs = productForm.querySelectorAll("input, select, textarea")
   inputs.forEach((input) => (input.style.borderColor = "var(--border-color)"))
-
 
   isEditing = false
   formTitle.textContent = "Agregar Nuevo Producto"
@@ -380,7 +355,6 @@ function resetForm() {
   submitBtn.innerHTML = '<i class="fas fa-plus"></i> Agregar Producto'
   cancelBtn.style.display = "none"
 }
-
 
 function validateField(field) {
   const value = field.value.trim()
@@ -498,7 +472,6 @@ function setSubmitButtonLoading(loading) {
   }
 }
 
-
 function showDeleteConfirmation(id, name) {
   productToDeleteId = id
   productToDelete.textContent = name
@@ -564,7 +537,6 @@ function showToast(message, type = "success") {
 
   toastContainer.appendChild(toast)
 
-
   setTimeout(() => {
     if (toast.parentNode) {
       toast.style.animation = "slideInRight 0.3s ease reverse"
@@ -604,14 +576,8 @@ function debounce(func, wait) {
   }
 }
 
-function formatDate(dateString) {
-  const date = new Date(dateString)
-  return date.toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  })
-}
+window.editProduct = editProduct
+window.showDeleteConfirmation = showDeleteConfirmation
 
 window.addEventListener("error", (e) => {
   console.error("Error global:", e.error)
@@ -625,6 +591,3 @@ window.addEventListener("online", () => {
 window.addEventListener("offline", () => {
   showToast("Sin conexión a internet", "warning")
 })
-
-window.editProduct = editProduct
-window.showDeleteConfirmation = showDeleteConfirmation

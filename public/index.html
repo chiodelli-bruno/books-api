@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Productos - CRUD con Búsqueda</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header class="header">
             <div class="header-content">
                 <h1><i class="fas fa-shopping-cart"></i> Gestión de Productos</h1>
@@ -18,7 +17,6 @@
             </div>
         </header>
 
-        <!-- Search Section -->
         <section class="search-section">
             <div class="search-container">
                 <div class="search-box">
@@ -52,9 +50,7 @@
             </div>
         </section>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Formulario de Producto -->
             <section class="form-section">
                 <div class="card">
                     <div class="card-header">
@@ -161,7 +157,7 @@
                                         type="url" 
                                         id="imageUrl" 
                                         name="imageUrl"
-                                        placeholder="https://ejemplo.com/imagen.jpg"
+                                        placeholder=""
                                     >
                                     <span class="error-message" id="imageUrlError"></span>
                                 </div>
@@ -190,7 +186,7 @@
                 </div>
             </section>
 
-            <!-- Lista de Productos -->
+
             <section class="products-section">
                 <div class="card">
                     <div class="card-header">
@@ -205,7 +201,6 @@
                             Cargando productos...
                         </div>
                         <div id="productsContainer" class="products-container">
-                            <!-- Los productos se cargarán aquí dinámicamente -->
                         </div>
                         <div id="emptyState" class="empty-state" style="display: none;">
                             <i class="fas fa-box-open"></i>
@@ -217,10 +212,7 @@
             </section>
         </main>
 
-        <!-- Toast Notifications -->
         <div id="toastContainer" class="toast-container"></div>
-
-        <!-- Modal de Confirmación -->
         <div id="confirmModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">

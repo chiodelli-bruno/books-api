@@ -19,6 +19,7 @@ export const getAllBooks = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+// Obtener un libro por ID
 export const getBookById = async (req: Request, res: Response): Promise<void> => {
   try {
     const book = await Book.findById(req.params.id)
@@ -44,10 +45,12 @@ export const getBookById = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
+// Crear un nuevo libro
 export const createBook = async (req: Request, res: Response): Promise<void> => {
   try {
     const bookData: IBook = req.body
 
+    // Verificar si ya existe un libro con el mismo título
     const existingBook = await Book.findOne({ title: bookData.title })
     if (existingBook) {
       res.status(400).json({
@@ -72,6 +75,7 @@ export const createBook = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
+// Actualizar un libro existente
 export const updateBook = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedBook = await Book.findByIdAndUpdate(req.params.id, req.body, {
@@ -100,6 +104,7 @@ export const updateBook = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
+// Eliminar un libro
 export const deleteBook = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedBook = await Book.findByIdAndDelete(req.params.id)
